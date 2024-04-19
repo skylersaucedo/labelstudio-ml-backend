@@ -7,7 +7,7 @@ from fastapi import File, UploadFile, Request
 import uvicorn
 #import torch
 from fastapi.responses import RedirectResponse, HTMLResponse
-#import base64
+import base64
 import cv2
 import numpy as np
 
@@ -165,12 +165,13 @@ async def predictRequest(request: Request):
     else: 
       return "Content type is not supported."
   
-    if len(img_bytes) > 0:   # not sure if that works like that in Python...
-      
-      make_inference(im)
-      
-      return get_prediction(image_bytes=img_bytes)        
+    if len(img_bytes) > 0:   # not sure if that works like that in Python...      
+      return make_inference(image_bytes=img_bytes)        
       
     
     else: 
       return "Cannot extract image data from request"
+
+
+if __name__ == "__main__":
+  app.run(debug=True, host='0.0.0.0', port=8080)
