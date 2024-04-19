@@ -134,7 +134,9 @@ async def create_upload_file(file: UploadFile):
     return {"filename": file.filename}
 
 
-
+@app.post("/predict")
+async def make_inference(file: UploadFile = File(...)):
+#     image_bytes = await file.read()
 
 
 
