@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+black
+os
+requests
+boto3
+json
+opencv-python
+numpy
