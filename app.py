@@ -70,11 +70,11 @@ def one_hot_label(label):
     return r
 
 
-def make_inference(im):
+def make_inference(data):
   """invoke sagemaker model for inferencing"""
   
-  f = open(im, 'rb')
-  data = f.read()
+  #f = open(im, 'rb')
+  #data = f.read()
   #print(data)
   
   response = client.invoke_endpoint(
@@ -118,6 +118,10 @@ def make_inference(im):
           s_i = (int(xmin), int(ymax))
           s_f = (int(xmax), int(ymin))
           #img = cv2.rectangle(img, s_i, s_f, color, thickness) # show inference on img
+          
+  inference_packet = results['prediction'] ## convert to json response..
+          
+  return inference_packet
 
 ## endpoints
 
@@ -135,49 +139,38 @@ async def create_upload_file(file: UploadFile):
 
 
 @app.post("/predict")
-async def make_inference(file: UploadFile = File(...)):
-#     image_bytes = await file.read()
-
-
-
-# @app.post("/predictOLD")
-# async def predictFIle(file: UploadFile = File(...)):
-#     image_bytes = await file.read()
-#     print('length of inc image', len(image_bytes))
-#     model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=image_bytes)
-#     return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
-
-# # adding Matthias's route, using requests
-# # https://fastapi.tiangolo.com/advanced/using-request-directly/
-# @app.post("/predict")
-# async def predictRequest(request: Request):
+async def predictRequest(request: Request):
     
-#   if request.method == 'POST':
-#     content_type = request.headers.get('Content-type')
+  if request.method == 'POST':
+    content_type = request.headers.get('Content-type')
         
-#     if (content_type == 'application/json'):
+    if (content_type == 'application/json'):
       
-#       data = await request.json()
-#       if not data:
-#         return
+      data = await request.json()
+      if not data:
+        return
       
-#       img_string = data.get('file')
-#       #Clean string
-#       img_string = img_string[img_string.find(",")+1:]
-#       img_bytes = base64.b64decode(img_string)      
-#     elif (content_type == 'multipart/form-data'):
-#       print('you have multiformish dater!')
-#       if 'file' not in request.files:
-#         return {"oops":"no data in form"}
-#       file = request.files.get('file')
-#       if not file:
-#         return
-#       img_bytes = file.read()
-#     else: 
-#       return "Content type is not supported."
+      img_string = data.get('file')
+      #Clean string
+      img_string = img_string[img_string.find(",")+1:]
+      img_bytes = base64.b64decode(img_string)      
+    elif (content_type == 'multipart/form-data'):
+      print('you have multiformish dater!')
+      if 'file' not in request.files:
+        return {"oops":"no data in form"}
+      file = request.files.get('file')
+      if not file:
+        return
+      img_bytes = file.read()
+    else: 
+      return "Content type is not supported."
   
-#     if len(img_bytes) > 0:   # not sure if that works like that in Python...
-#       model_3_pred_idx, label_pred_3, model_10_pred_idx, label_pred_10 = get_prediction(image_bytes=img_bytes)        
-#       return {"earlyorlateID": model_3_pred_idx, "class_name_3": label_pred_3, "diseaseID": model_10_pred_idx, "class_name_10":label_pred_10}
-#     else: 
-#       return "Cannot extract image data from request"
+    if len(img_bytes) > 0:   # not sure if that works like that in Python...
+      
+      make_inference(im)
+      
+      return get_prediction(image_bytes=img_bytes)        
+      
+    
+    else: 
+      return "Cannot extract image data from request"
