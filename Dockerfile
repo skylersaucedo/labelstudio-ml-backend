@@ -28,7 +28,7 @@ RUN uv pip install --system -r /code/requirements.txt \
 
 COPY ./webapp /code/webapp
 
-WORKDIR /code/
+WORKDIR /code/webapp
 
 RUN python -m app.preloader
 
