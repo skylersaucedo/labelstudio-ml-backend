@@ -26,7 +26,7 @@ COPY requirements.txt /code/requirements.txt
 RUN uv pip install --system -r /code/requirements.txt \
    uv cache clean
 
-COPY ./app /code/app
+COPY ./webapp /code/webapp
 
 WORKDIR /code/
 
