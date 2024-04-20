@@ -7,14 +7,14 @@
 # ENTRYPOINT [ "uvicorn" ]
 # CMD ["--host", "0.0.0.0", "main:app"]
 
-# FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 # WORKDIR /webapp
 # COPY . /webapp
 # RUN pip install --upgrade pip &&\
 #    pip install --no-cache-dir --upgrade -r /webapp/requirements.txt
 # CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
 
-FROM public.ecr.aws/docker/library/python:3.11-bookworm
+# FROM public.ecr.aws/docker/library/python:3.11-bookworm
 
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
